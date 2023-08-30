@@ -1,4 +1,5 @@
-# CF-Friends_Submissions
-It's a mini project for viewing your friends’ submissions in a date interval and filter them according to the ratings.
-
+# CodeForces Friends Submisssions Viewer
+• Uses CodeForces API and your account’s API key and Secret, with multiple customisable parameters such as
+start date, number of friends, and number of submissions.
+• View their solved problems with a link to visit them and difficulty rating
 https://cf-friends-submissions.netlify.app/
