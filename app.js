@@ -6,10 +6,6 @@ const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 
 const app = express();
 
-app.use(express.static('public'));
-app.use(express.json());
-app.use(cookieParser());
-
 app.set('view engine', 'ejs');
 
 const dbURI = 'mongodb+srv://aman_cf:test1234@cluster0.oji0xpr.mongodb.net/node-auth?retryWrites=true&w=majority';
@@ -17,3 +13,6 @@ const dbURI = 'mongodb+srv://aman_cf:test1234@cluster0.oji0xpr.mongodb.net/node-
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
   .then((result) => app.listen(3000))
   .catch((err) => console.log(err));
+
+// routes
+app.get('/', (req, res) => res.render('home'));

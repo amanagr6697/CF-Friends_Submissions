@@ -1,5 +1,4 @@
 
-//to handle data
 class Friends {
     constructor(handle, problem_name, rating, purl) {
         this.handle = handle;
@@ -8,24 +7,28 @@ class Friends {
         this.purl = purl;
     }
 }
-//to display
+
 class Display {
     add(inp) {
         let show = document.getElementById('show');
         let inpstr;
         if (inp.purl.length != 0) {
             inpstr = `<tr>
-            <td>${inp.handle}</td>
-            <td><a href="${inp.purl}">${inp.problem_name}</a></td>
-            <td>${inp.rating}</td>
-        </tr>`
+            <td>
+              <td class="handle">${inp.handle}</td>
+              <td class="problem-name"><a href="${inp.purl}">${inp.problem_name}</a></td>
+              <td class="rating">${inp.rating}</td>
+            </td>
+          </tr>`
         }
         else {
             inpstr = `<tr>
-            <td>${inp.handle}</td>
-            <td>${inp.problem_name}</td>
-            <td>${inp.rating}</td>
-        </tr>`
+            <td>
+              <td class="handle">${inp.handle}</td>
+              <td class="problem-name">${inp.problem_name}</td>
+              <td class="rating">${inp.rating}</td>
+            </td>
+          </tr>`
         }
         show.innerHTML += inpstr;
     }
@@ -119,11 +122,15 @@ import { SHA512 } from "./sha512_hash.js"
 
 let yo = document.getElementById('friends');
 yo.addEventListener('submit', calling);
+
 var number;
 
 function calling(e) {
+    console.log("aman agrawal")
     var APIkey = document.getElementById("ak").value;
     var secret = document.getElementById("skey").value;
+    console.log(secret);
+    console.log("aman");
     var code = "936854/user.friends?apiKey=" + APIkey + "&onlyOnline=false&time=" + time + "#" + secret;
     code = SHA512(code);
     var base_url = "https://codeforces.com/api/user.friends?apiKey=" + APIkey + "&onlyOnline=false&time=" + time + "&apiSig=936854" + code;
