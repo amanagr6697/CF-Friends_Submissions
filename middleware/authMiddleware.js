@@ -1,9 +1,8 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { User } = require('../models/User');
 
 const requireAuth = (req, res, next) => {
   const token = req.cookies.jwt;
-
   if (token) {
     jwt.verify(token, 'amanRocks', (err, decodedToken) => {
       if (err) {
