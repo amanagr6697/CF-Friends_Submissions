@@ -17,14 +17,29 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+const problemSchema = new mongoose.Schema({
+  problemName: {
+    type: String,
+    required: true,
+  },
+  url: {
+    type: String,
+    required: true
+  },
+  userEmail: {
+    type: String
+  }
+});
 
+
+// fire a function before doc saved to db
 userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
-
+// static method to login user
 userSchema.statics.login = async function(email, password) {
   const user = await this.findOne({ email });
   if (user) {
@@ -37,6 +52,9 @@ userSchema.statics.login = async function(email, password) {
   throw Error('incorrect email');
 };
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+const pSchema = mongoose.model('pSchema',problemSchema)
+
+module.exports =  User;
+module.exports = pSchema;
