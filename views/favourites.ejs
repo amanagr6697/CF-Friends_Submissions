@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/new_sheet.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CF Friends</title>
+</head>
+
+<body>
+    <nav>
+        <h1><a href="/">CF Buddies</a></h1>
+        <ul>
+            <% if (user) { %>
+                <li><a href="/favourites" class="btn btn-primary">Favourites</a></li>
+                <li>Welcome, <%= user.email %></li>
+                <li><a href="/logout" class="btn btn-primary">Log out</a></li>
+            <% } else { %>
+                <li><a href="/login">Log in</a></li>
+                <li><a href="/signup" class="btn">Sign up</a></li>
+            <% } %>
+        </ul>
+    </nav>
+
+    <div id="problem-list">
+        <% if (problems.length > 0) { %>
+            <% for (let i = 0; i < problems.length; i++) { %>
+                <div class="problem-tile">
+                    <h3><%= i + 1 %>. <%= problems[i].problemName %></h3>
+                    <a href="<%= problems[i].url %>" target="_blank">Go to Problem</a>
+                </div>
+            <% } %>
+        <% } else { %>
+            <div class="empty-list-message">
+                <p>No favourite problems to show</p>
+            </div>
+        <% } %>
+    </div>
+</body>
+
+</html>

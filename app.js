@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const cookieParser = require('cookie-parser');
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
-
+const {problems_retrieve} = require('./controllers/favouriteController')
 const app = express();
 
 app.use(express.static('public'));
@@ -21,4 +21,9 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 app.get('*', checkUser);
 app.get('/', (req, res) => res.render('home'));
 app.get('/friends', requireAuth, (req, res) => res.render('page'));
+
+app.get('/favourites', requireAuth,  async (req, res) => {
+  await problems_retrieve(req, res);
+  res.render('favourites');
+});
 app.use(authRoutes);

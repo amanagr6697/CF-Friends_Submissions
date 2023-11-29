@@ -1,3 +1,8 @@
+/*
+* Secure Hash Algorithm (SHA512)
+* http://www.happycode.info/
+*/
+
 function SHA512(str) {
     function int64(msint_32, lsint_32) {
         this.highOrder = msint_32;

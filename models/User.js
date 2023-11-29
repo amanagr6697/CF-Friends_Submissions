@@ -24,10 +24,11 @@ const problemSchema = new mongoose.Schema({
   },
   url: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   userEmail: {
-    type: String,
+    type: String
   }
 });
 

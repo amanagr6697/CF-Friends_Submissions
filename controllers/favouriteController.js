@@ -28,3 +28,15 @@ module.exports.problems_add = async (req, res) => {
     }
 
 }
+
+module.exports.problems_retrieve = async (req, res) => {
+    const userEmail = res.locals.user.email;
+
+    try {
+        const problems = await pSchema.find({ userEmail });
+        res.locals.problems = problems;
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};

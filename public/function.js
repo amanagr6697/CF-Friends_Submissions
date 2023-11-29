@@ -1,4 +1,5 @@
 
+
 class Friends {
     constructor(handle, problem_name, rating, purl) {
         this.handle = handle;
@@ -8,34 +9,33 @@ class Friends {
     }
 }
 
+var favourite_problems = [];
+
 class Display {
     add(inp) {
         let show = document.getElementById('show');
         let inpstr;
-        if (inp.purl.length != 0) {
+        if (inp.purl.length !== 0) {
             inpstr = `<tr>
-            <td>
-              <td class="handle">${inp.handle}</td>
-              <td class="problem-name"><a href="${inp.purl}">${inp.problem_name}</a></td>
-              <td class="rating">${inp.rating}</td>
-            </td>
-          </tr>`
-        }
-        else {
+                <td class="handle">${inp.handle}</td>
+                <td class="problem-name"><a href="${inp.purl}">${inp.problem_name}</a></td>
+                <td class="rating">${inp.rating}</td>
+                <td><input type="checkbox" class="favorite-checkbox" data-name="${inp.problem_name}" data-url="${inp.purl}"></td>
+            </tr>`;
+        } else {
             inpstr = `<tr>
-            <td>
-              <td class="handle">${inp.handle}</td>
-              <td class="problem-name">${inp.problem_name}</td>
-              <td class="rating">${inp.rating}</td>
-            </td>
-          </tr>`
+                <td class="handle">${inp.handle}</td>
+                <td class="problem-name">${inp.problem_name}</td>
+                <td class="rating">${inp.rating}</td>
+                <td><input type="checkbox" class="favorite-checkbox" data-name="${inp.problem_name}" data-url="${inp.purl}"></td>
+            </tr>`;
         }
         show.innerHTML += inpstr;
     }
 
     show() {
         var message = document.getElementById('msgaman');
-        message.innerHTML = `<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        message.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>Alert: </strong>API key or Secret is invalid.
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>`;
@@ -43,6 +43,7 @@ class Display {
             message.innerHTML = '';
         }, 4000);
     }
+
     show1() {
         var message = document.getElementById('msgaman');
         message.innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -55,6 +56,84 @@ class Display {
     }
 }
 
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('favorite-checkbox')) {
+        let checkbox = event.target;
+        let problemName = checkbox.getAttribute('data-name');
+        let problemURL = checkbox.getAttribute('data-url');
+
+        if (checkbox.checked) {
+            favourite_problems.push({ pName: problemName, pURL: problemURL });
+        } else {
+            favourite_problems = favourite_problems.filter(item => !(item.name === problemName && item.url === problemURL));
+        }
+
+        console.log("Favourite Problems:", favourite_problems);
+    }
+});
+
+document.querySelector("#favorite-btn").addEventListener("click", favoriteSelected);
+
+function showError() {
+    let messagesElement = document.getElementById('favourite-message');
+    messagesElement.innerHTML = '<div class="alert alert-danger" role="alert">Invalid choices made - Missing or empty problem link</div>';
+    setTimeout(() => {
+        messagesElement.innerHTML = ''; 
+    }, 3000);
+}
+
+function favoriteSelected() {
+    let checkboxes = document.querySelectorAll('.favorite-checkbox');
+    let selectedProblems = [];
+    let messagesElement = document.getElementById('favourite-message');
+    let flag = 0;
+
+    checkboxes.forEach((checkbox, index) => {
+        if (checkbox.checked) {
+            let row = checkbox.closest('tr');
+            let problemName = row.querySelector('.problem-name').textContent;
+            let problemLinkElement = row.querySelector('.problem-name a');
+
+            if (problemLinkElement && problemLinkElement.hasAttribute('href')) {
+                let problemLink = problemLinkElement.getAttribute('href');
+                selectedProblems.push({ pName: problemName, pURL: problemLink });
+            } else {
+                showError();
+                flag = 1;
+            }
+        }
+    });
+
+    console.log("Selected Problems:", selectedProblems);
+    if (flag === 0) {
+        fetch("http://localhost:3000/favAdd", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                favList: selectedProblems
+            })
+        })
+        .then((res) => {
+            if (!res.ok) {
+                return Promise.reject("failed to favorite");
+            } else {
+                console.log("done");
+                messagesElement.innerHTML = '<div class="alert alert-success" role="alert">Selected problems have been added to favourites</div>';
+                return;
+            }
+        })
+        .catch((e) => {
+            messagesElement.innerHTML = '<div class="alert alert-danger" role="alert">Invalid choices made</div>';
+        })
+        .finally(() => {
+            setTimeout(() => {
+                messagesElement.innerHTML = '';
+            }, 3000);
+        });
+    }
+}
 
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
@@ -114,10 +193,19 @@ function submission(arr, i) {
                 }
             }
         })
+
+    let favoriteButton = document.createElement('button');
+    favoriteButton.textContent = "Favorite these";
+    favoriteButton.addEventListener('click', function () {
+        let display = new Display();
+        display.favoriteSelected();
+        document.body.appendChild(favoriteButton);
+    });
 }
 
 
 import { SHA512 } from "./sha512_hash.js"
+
 
 
 let yo = document.getElementById('friends');
