@@ -1,6 +1,7 @@
 # CodeForces Buddies
 
 Ever felt lazy about solving problems on Codeforces? But then saw your friends solving and you got motivated to just crush those with your curiosity? And wanted to solve problems that your friend intented to solve(or solved)? Look no further, this got your covered!!
+
 ![Codeforces Buddies](public/Home.png)
 
 - Sign Up and Login in the system.
