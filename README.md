@@ -28,5 +28,4 @@ Ever felt lazy about solving problems on Codeforces? But then saw your friends s
 3. Change secret for your jwt token or let it as it is
 4. run nodemon start
 ```
- 
 
