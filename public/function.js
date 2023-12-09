@@ -106,7 +106,8 @@ function favoriteSelected() {
 
     console.log("Selected Problems:", selectedProblems);
     if (flag === 0) {
-        fetch("http://localhost:3000/favAdd", {
+        fetch("http://localhost:3000/favAdd", 
+        {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
