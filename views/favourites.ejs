@@ -1,42 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <link rel="stylesheet" href="/new_sheet.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <link rel="stylesheet" href="/new_sheet.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CF Friends</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <nav>
-        <h1><a href="/">CF Buddies</a></h1>
-        <ul>
-            <% if (user) { %>
-                <li><a href="/favourites" class="btn btn-primary">Favourites</a></li>
-                <li>Welcome, <%= user.email %></li>
-                <li><a href="/logout" class="btn btn-primary">Log out</a></li>
-            <% } else { %>
-                <li><a href="/login">Log in</a></li>
-                <li><a href="/signup" class="btn">Sign up</a></li>
-            <% } %>
-        </ul>
-    </nav>
-
-    <div id="problem-list">
-        <% if (problems.length > 0) { %>
-            <% for (let i = 0; i < problems.length; i++) { %>
-                <div class="problem-tile">
-                    <h3><%= i + 1 %>. <%= problems[i].problemName %></h3>
-                    <a href="<%= problems[i].url %>" target="_blank">Go to Problem</a>
-                </div>
-            <% } %>
+      <h1><a href="/">CF Buddies</a></h1>
+      <ul>
+        <% if (user) { %>
+        <li><a href="/favourites" class="btn btn-primary">Favourites</a></li>
+        <li>Welcome, <%= user.email %></li>
+        <li><a href="/logout" class="btn btn-primary">Log out</a></li>
         <% } else { %>
-            <div class="empty-list-message">
-                <p>No favourite problems to show</p>
-            </div>
+        <li><a href="/login">Log in</a></li>
+        <li><a href="/signup" class="btn">Sign up</a></li>
         <% } %>
+      </ul>
+    </nav>
+    <div id="msg"></div>
+    <div id="problem-list">
+      <% if (problems.length > 0) { %> <% for (let i = 0; i < problems.length;
+      i++) { %>
+      <div class="problem-tile" id="problem<%= i %>">
+        <h3><%= problems[i].problemName %></h3>
+        <input
+          class="delete-btn"
+          type="image"
+          src="bin.png"
+          data-url="<%= problems[i].url %>"
+          data-index="<%= i %>"
+        />
+        <a href="<%= problems[i].url %>" target="_blank">Go to Problem</a>
+      </div>
+      <% } %> <% } else { %>
+      <div class="empty-list-message">
+        <p>No favourite problems to show</p>
+      </div>
+      <% } %>
     </div>
-</body>
-
+  </body>
 </html>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-btn").forEach(function (deleteIcon) {
+      deleteIcon.addEventListener("click", async function (e) {
+        var problemURL = this.getAttribute("data-url");
+        var problemIndex = this.getAttribute("data-index");
+        var pTile = document.getElementById("problem" + problemIndex);
+        try {
+          const res = await fetch("/favourites", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ problemURL }),
+          });
+
+          const error = document.getElementsByClassName("msg");
+          if (!res.ok) {
+            msg.innerHTML =
+              '<div class="alert alert-danger" role="alert">Invalid choices made</div>';
+          } else {
+            msg.innerHTML =
+              '<div class="alert alert-success" role="alert">Problem Deleted!</div>';
+          }
+          pTile.remove();
+
+          setTimeout(function () {
+            msg.innerHTML = "";
+          }, 2000);
+        } catch (err) {}
+      });
+    });
+  });
+</script>
